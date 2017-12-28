@@ -1,3 +1,4 @@
+const ndef = require('ndef');
 let arrayEqual = (a, b) => a && b && a.length === b.length && a.every((v, i) => v === b[i]);
 let bytesToStr = bytes => bytes.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
 
@@ -59,6 +60,7 @@ function parseUri(record) {
     return null;
 }
 
-export default {
-    parseUri
+module.exports = {
+    parseUri,
+    ndef
 }
