@@ -352,19 +352,6 @@ class NfcManager extends ReactContextBaseJavaModule implements ActivityEventList
 		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		// Parcelable[] messages = intent.getParcelableArrayExtra((NfcAdapter.EXTRA_NDEF_MESSAGES));
 
-		synchronized(this) {
-			if (writeNdefRequest != null) {
-				writeNdef(
-					tag, 
-					writeNdefRequest
-				);
-				writeNdefRequest = null;
-
-				// explicitly return null, to avoid extra detection
-				return null;
-			}
-		}
-
 		if (action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
 			Ndef ndef = Ndef.get(tag);
 			Parcelable[] messages = intent.getParcelableArrayExtra((NfcAdapter.EXTRA_NDEF_MESSAGES));
@@ -382,6 +369,16 @@ class NfcManager extends ReactContextBaseJavaModule implements ActivityEventList
 			}
 		} else if (action.equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
 			parsed = tag2React(tag);
+		}
+
+		synchronized(this) {
+			if (writeNdefRequest != null) {
+				writeNdef(
+					tag, 
+					writeNdefRequest
+				);
+				writeNdefRequest = null;
+			}
 		}
 
 		return parsed;
