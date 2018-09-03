@@ -54,7 +54,6 @@ class NfcManager {
       this._session.remove();
       this._session = null;
     }
-
     return Promise.resolve();
   }
 
