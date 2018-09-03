@@ -54,7 +54,6 @@ class NfcManager {
       this._session.remove();
       this._session = null;
     }
-  
     return Promise.resolve();
   }
 
@@ -152,6 +151,10 @@ class NfcManager {
   }
 
   _handleSessionClosed = () => {
+    if (this._subscription) {
+        this._subscription.remove();
+        this._subscription = null;
+    }
     this._clientTagDiscoveryListener = null;
     this._clientSessionClosedListener && this._clientSessionClosedListener();
   }
@@ -162,6 +165,22 @@ class NfcManager {
     }
 
     return Promise.resolve(NfcManagerEmitter.addListener(Events.StateChanged, listener));
+  }
+
+  setNdefPushMessage(bytes) {
+    if (Platform.OS === 'ios') {
+      return Promise.reject('not implemented');
+    }
+
+    return new Promise((resolve, reject) => {
+      NativeNfcManager.setNdefPushMessage(bytes, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      })
+    })
   }
 
   // -------------------------------------
@@ -250,6 +269,22 @@ class NfcManager {
     })
   }
 
+  getTag() {
+    if (Platform.OS === 'ios') {
+      return Promise.reject('not implemented');
+    }
+
+    return new Promise((resolve, reject) => {
+      NativeNfcManager.getTag((err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      })
+    })
+  }
+
   // -------------------------------------
   // NfcTech.Ndef API
   // -------------------------------------
@@ -292,6 +327,22 @@ class NfcManager {
 
     return new Promise((resolve, reject) => {
       NativeNfcManager.getCachedNdefMessage((err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      })
+    })
+  }
+
+  makeReadOnly() {
+    if (Platform.OS === 'ios') {
+      return Promise.reject('not implemented');
+    }
+
+    return new Promise((resolve, reject) => {
+      NativeNfcManager.makeReadOnly((err, result) => {
         if (err) {
           reject(err);
         } else {
